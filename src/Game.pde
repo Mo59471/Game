@@ -108,7 +108,7 @@ void keyPressed() {
   if(key == 'q') {
     if(!p1Strike) { //Insures that a hit only registers the first time the attack key is pressed instead of registering over and over while held
       p1Strike = true;
-      if(p2.hitbox(p1.x + 100,p1.y+30)) { //Check if player 2's hitbox is contacted; pass in position of player 1's cane
+      if(p2.hitbox(p1.position()[0] + 100,p1.position()[1]+30)) { //Check if player 2's hitbox is contacted; pass in position of player 1's cane
         p2.takeDamage(2); //Pass in damage
         p1.addScore(1); //Update score
         println("Damage"); 
@@ -118,7 +118,7 @@ void keyPressed() {
   if(key == 'o') {
     if(!p2Strike) {
       p2Strike = true;
-      if(p1.hitbox(p2.x - 50,p2.y+30)) {
+      if(p1.hitbox(p2.position()[0] - 50,p2.position()[1]+30)) {
         p1.takeDamage(2);
         p2.addScore(1);
         println("Damage");
