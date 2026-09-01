@@ -117,13 +117,19 @@ void keyPressed() {
   }
   if(key == 'o') {
     if(!p2Strike) {
-    p2Strike = true;
-    if(p1.hitbox(p2.x - 50,p2.y+30)) {
-      p1.takeDamage(2);
-      p2.addScore(1);
-      println("Damage");
-    }  
+      p2Strike = true;
+      if(p1.hitbox(p2.x - 50,p2.y+30)) {
+        p1.takeDamage(2);
+        p2.addScore(1);
+        println("Damage");
+      }  
+    }
   }
+  if(key == ' ' && (screen == '1' || screen == '2')) {
+    screen = 'p';
+    //Reset players (reinstantiate)
+    p1.reset(100, 0, 50, 250);
+    p2.reset(100, 0, 400, 250);
   }
 }
 //Key release logic; sets corresponding boolean control flags to false once key is released
@@ -199,7 +205,6 @@ void draw() {
        if(p1Right) {
         p1.move('r');
       }
-       
       if(p2Up) {
         p2.move('u');
       }
@@ -225,6 +230,8 @@ void draw() {
       textAlign(CENTER);
       textSize(30);
       text("Preston Brooks Wins!",width/2,height/2);
+      textSize(15);
+      text("Press the spacebar to play again", width/2, height/2+20);
       break;
     case '2': //player 2 win screen
       background(0,0,0);
@@ -232,6 +239,8 @@ void draw() {
       textAlign(CENTER);
       textSize(30);
       text("Charles Sumner Wins!",width/2,height/2);
+      textSize(15);
+      text("Press the spacebar to play again", width/2, height/2+20);      
       break;
   }
 
