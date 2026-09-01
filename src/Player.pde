@@ -91,4 +91,11 @@ class Player {
       }
     }
   }
+  
+  public void reset(int health, int score, int x, int y) {
+    this.health = health;
+    this.score = score;
+    this.x = x;
+    this.y = y;
+  }
 }
