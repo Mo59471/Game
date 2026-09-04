@@ -1,6 +1,5 @@
 class Player {
   
-  private String name; 
   private int health;
   private int score;
   private int x; //x position
@@ -10,36 +9,45 @@ class Player {
   private PImage caneImg_strike; // cane image in striking/attacking/slamming form
   
   //constructor
-  public Player(String name, int health, int score, int x, int y) {
-    this.name = name;
+  public Player(int health, int score, int x, int y) {
     this.health = health;
     this.score = score;
     this.x = x;
     this.y = y;
   }
   
+  //Setter for images
+  public void setImg(String imgName, String caneImgName, String caneStrikeImgName) {
+    this.img = loadImage(imgName);
+    this.caneImg_norm = loadImage(caneImgName);
+    this.caneImg_strike = loadImage(caneStrikeImgName);
+  }
+  
   //Player setup; initialize images
   // Cannot be done in the constructor since the class is instantiated prior to 'void setup()' in the main file being called; images can only be loaded after 'void setup()' is called
   public void playerSetup() {
-    if(name == "brooks"){
-      this.img = loadImage("PrestonBrooks.jpg");
-      this.caneImg_norm = loadImage("Cane2_norm.png");
-      this.caneImg_strike = loadImage("Cane2_strike.png");
-    } else if (name == "sumner") {
-      this.img = loadImage("CharlesSummer.jpg");
-      this.caneImg_norm = loadImage("Cane1_norm.png");
-      this.caneImg_strike = loadImage("Cane1_strike.png");
-    }
     img.resize(50,75);
     caneImg_norm.resize(70,70);
     caneImg_strike.resize(75,50);
   }
   
-  //Getter for retrieving player data
+  //getter for images
+  public PImage[] getImg() {
+    PImage[] returnVal = {caneImg_norm, caneImg_strike};
+    return returnVal;
+  }
+  
+  //Getter for retrieving player status data
   public int[] status() {
     //returns and integer array of shape 2 with the health at index 0, score at index 1
     int[] returnVal = {health,score};
     return returnVal;
+  }
+  
+  //setter for position data
+  public void setPosition(int x, int y) {
+    this.x = x;
+    this.y = y;
   }
   
   //Getter for retrieving position data
@@ -89,24 +97,11 @@ class Player {
   }
   
   //draw the player
-  public void drawPlayer(boolean strike) { //takes a boolean denoting whether the player is striking or not as an argument to decide whether or not the cane should be shown slamming down
+  public void drawPlayer(boolean strike) { //NOTE: the arg is not used here, but is still denoted so that overriding can be done in the subclasses where the arg is used
     image(img, x, y); //display avatar on screen
-    if(name == "brooks") {
-      if(strike) {
-        image(caneImg_strike, x+40, y+30); //display cane being slammed
-      } else {
-        image(caneImg_norm,x+40,y); //display cane in resting position
-      }
-    } else {
-      if(strike) {
-        image(caneImg_strike, x-60, y+30);
-      } else {
-        image(caneImg_norm,x-60,y);
-      }
-    }
   }
   
-  public void reset(int health, int score, int x, int y) {
+  public void reset(int health, int score, int x, int y) { //reset member vars
     this.health = health;
     this.score = score;
     this.x = x;
