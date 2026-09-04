@@ -20,13 +20,15 @@ GAME SUMMARY:
 - Players have 100 health, each cain hit does 2 damage
 - Each hit adds one to a player's score
 
-PLAYER 1 CONTROLS:
+PLAYER 1 (Preston Brooks) CONTROLS:
 - WASD to move
 - Q to attack with cane
+- E to jump attack (jump to p2's position to cane them, cooldown 1s) 
 
-PLAYER 2 CONTROLS:
+PLAYER 2 (Charlse Sumner) CONTROLS:
 - IJKL to move
 - O to attack with cane
+- SPACE to dodge (jump to random position, cooldown 2s)
 
 HISTORICAL BACKGROUND:
 
@@ -44,8 +46,8 @@ In this reimagination, Sumner and Brooks have an epic 'caning battle'
 **/
 
 //instantiate player classes
-Player p1 = new Player("brooks", 100, 0, 50, 250) ;
-Player p2 = new Player("sumner", 100, 0, 400, 250);
+PrestonBrooks p1 = new PrestonBrooks(100, 0, 50, 250) ;
+CharlesSumner p2 = new CharlesSumner(100, 0, 400, 250);
 
 // Control flags:
 //booleans for tracking whether the controls for movement are being held (up, down, left right) for each player
@@ -125,11 +127,16 @@ void keyPressed() {
       }  
     }
   }
+  if(key == 'e') {
+    p1.jumpAttack(p2.position()[0], p2.position()[1]); // jump attack; pass in p2's position using the getter 
+  }
   if(key == ' ' && (screen == '1' || screen == '2')) {
     screen = 'p';
     //Reset players (reinstantiate)
     p1.reset(100, 0, 50, 250);
     p2.reset(100, 0, 400, 250);
+  } else if (key == ' ') { //dodge move
+    p2.dodge();
   }
 }
 //Key release logic; sets corresponding boolean control flags to false once key is released
@@ -223,6 +230,8 @@ void draw() {
       } else if (p2.status()[0] == 0) {
         screen = '1';
       }
+      p2.incrementCooldown(); //Increment cooldowns for both player's dodge/jumpAttack
+      p1.incrementCooldown();
       break;
     case '1': //player 1 win screen
       background(0,0,0);
