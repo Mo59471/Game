@@ -7,6 +7,8 @@ class Player {
   private PImage img; // avatar image
   private PImage caneImg_norm; // cane image in rest form
   private PImage caneImg_strike; // cane image in striking/attacking/slamming form
+  private boolean abilityUsed; //track if the ability is used
+  private int coolDown; //track cooldown for abilities 
   
   //constructor
   public Player(int health, int score, int x, int y) {
@@ -14,6 +16,8 @@ class Player {
     this.score = score;
     this.x = x;
     this.y = y;
+    this.abilityUsed = false;
+    this.coolDown = 0;
   }
   
   //Setter for images
@@ -107,4 +111,31 @@ class Player {
     this.x = x;
     this.y = y;
   }
+  
+  public void useAbility(int jumpX, int jumpY) { //unused args here taken so that overriding works where the child classes do use these args
+    //No significant functionlaity here, overriden by child classes
+    println("Ability used");
+  }
+  
+  public void incrementCooldown() { //Increment cooldown for player abilities
+    if(abilityUsed) {coolDown += 1;}
+  }
+  
+  public int getCooldown() {
+    return coolDown;
+  }
+  
+  public void setCooldown(int setVal) {
+    coolDown = setVal;
+  }
+  
+  public boolean getAbilityUsed() {
+    return abilityUsed;
+  }
+  
+  public void setAbilityUsed(boolean setVal) {
+    abilityUsed = setVal;
+  }
+  
+  
 }
