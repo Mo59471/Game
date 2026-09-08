@@ -46,8 +46,11 @@ In this reimagination, Sumner and Brooks have an epic 'caning battle'
 **/
 
 //instantiate player classes
-PrestonBrooks p1 = new PrestonBrooks(100, 0, 50, 250) ;
-CharlesSumner p2 = new CharlesSumner(100, 0, 400, 250);
+Player[] players = {
+  new PrestonBrooks(100, 0, 50, 250),
+  new CharlesSumner(100, 0, 400, 250)
+};
+
 
 // Control flags:
 //booleans for tracking whether the controls for movement are being held (up, down, left right) for each player
@@ -67,6 +70,10 @@ boolean p2Strike = false;
 // char which tracks the current screen (later used in switch block screen manager)
 char screen = 'p'; // 'p': play screen | '1': player 1 win screen | '2': player 2 win screen
 
+// Array for storing the player data (p1 score, p1 health, p2 score, p2 health) that will be drawn to the screen
+// 2-Dimensional: Stores two sublists corresponding to each player, each containing health and sc
+int[][] playerData = new int[2][2]; 
+
 // Setup (call once at start)
 void setup(){
   size(500, 500);
@@ -75,8 +82,9 @@ void setup(){
   PURPOSE: initialize images (for cane and player avatar)
   that can't be created prior to setup being called, 
   i.e. can't be set in the constructor at class instantiation) **/
-  p1.playerSetup();
-  p2.playerSetup();
+  for (int i = 0; i < players.length; i++ ) {
+    players[i].playerSetup();
+  }
 }
 
 // Key detection logic
@@ -110,9 +118,9 @@ void keyPressed() {
   if(key == 'q') {
     if(!p1Strike) { //Insures that a hit only registers the first time the attack key is pressed instead of registering over and over while held
       p1Strike = true;
-      if(p2.hitbox(p1.position()[0] + 100,p1.position()[1]+30)) { //Check if player 2's hitbox is contacted; pass in position of player 1's cane
-        p2.takeDamage(2); //Pass in damage
-        p1.addScore(1); //Update score
+      if(players[1].hitbox(players[0].position()[0] + 100,players[0].position()[1]+30)) { //Check if player 2's hitbox is contacted; pass in position of player 1's cane
+        players[1].takeDamage(2); //Pass in damage
+        players[0].addScore(1); //Update score
         println("Damage"); 
       }
     }
@@ -120,23 +128,23 @@ void keyPressed() {
   if(key == 'o') {
     if(!p2Strike) {
       p2Strike = true;
-      if(p1.hitbox(p2.position()[0] - 50,p2.position()[1]+30)) {
-        p1.takeDamage(2);
-        p2.addScore(1);
+      if(players[0].hitbox(players[1].position()[0] - 50,players[1].position()[1]+30)) {
+        players[0].takeDamage(2);
+        players[1].addScore(1);
         println("Damage");
       }  
     }
   }
   if(key == 'e') {
-    p1.jumpAttack(p2.position()[0], p2.position()[1]); // jump attack; pass in p2's position using the getter 
+    players[0].useAbility(players[1].position()[0], players[1].position()[1]); // jump attack; pass in p2's position using the getter 
   }
   if(key == ' ' && (screen == '1' || screen == '2')) {
     screen = 'p';
     //Reset players (reinstantiate)
-    p1.reset(100, 0, 50, 250);
-    p2.reset(100, 0, 400, 250);
+    players[0].reset(100, 0, 50, 250);
+    players[1].reset(100, 0, 400, 250);
   } else if (key == ' ') { //dodge move
-    p2.dodge();
+    players[1].useAbility(0,0); //dummy parameters: Don't mean anything, but required for method overriding (parameters must be identical with parent class method)
   }
 }
 //Key release logic; sets corresponding boolean control flags to false once key is released
@@ -180,58 +188,59 @@ void draw() {
     case 'p': // play screen
       background(255,255,255);
       
-      //Strings corresponding to player 1 and player 2 health and score (accessed with the 'getter' status)
-      String brooksHealth = "Preston Brooks Health: " + str(p1.status()[0]);
-      String brooksScore = "Preston Brooks Score: " +str(p1.status()[1]);
-      String sumnerHealth = "Charles Sumner Health: " + str(p2.status()[0]);
-      String sumnerScore = "Charles Sumner Score: " +str(p2.status()[1]);
+      //Get player 1 and player 2 health and score (accessed with the 'getter' status()), insert to playerData
+      for(int i = 0; i < players.length; i ++) {
+        playerData[i] = players[i].status();
+      }
       
       //display health and score
       textAlign(CORNER);
       fill(0,0,0);
       textSize(15);
-      text(brooksHealth, 10, 20);
-      text(brooksScore, 10, 35);
-      text(sumnerHealth, 300, 20);
-      text(sumnerScore, 300, 35);
+      text("Preston Brooks Health: " + str(playerData[0][0]) , 10, 20);
+      text("Preston Brooks Score: " + str(playerData[0][1]), 10, 35);
+      text("Charles Sumner Health: " + str(playerData[1][0]), 300, 20);
+      text("Charles Sumner Score: " + str(playerData[1][1]), 300, 35);
       
       //Draw the players (show cane being slammed if attack keys have been pressed)
-      p1.drawPlayer(p1Strike);
-      p2.drawPlayer(p2Strike);
+      players[0].drawPlayer(p1Strike);
+      players[1].drawPlayer(p2Strike);
     
       // move players based on boolean control flags
       if(p1Up) {
-        p1.move('u'); //char argument denotes which direction to move in
+        players[0].move('u'); //char argument denotes which direction to move in
       }
        if(p1Down) {
-        p1.move('d');
+        players[0].move('d');
       }
        if(p1Left) {
-        p1.move('l');
+        players[0].move('l');
       }
        if(p1Right) {
-        p1.move('r');
+        players[0].move('r');
       }
       if(p2Up) {
-        p2.move('u');
+        players[1].move('u');
       }
        if(p2Down) {
-        p2.move('d');
+        players[1].move('d');
       }
        if(p2Left) {
-        p2.move('l');
+        players[1].move('l');
       }
        if(p2Right) {
-        p2.move('r');
+        players[1].move('r');
       }
       //Update screen if either of the player's health drops to 0
-      if (p1.status()[0] == 0) {
+      if (players[0].status()[0] == 0) {
         screen = '2';
-      } else if (p2.status()[0] == 0) {
+      } else if (players[1].status()[0] == 0) {
         screen = '1';
       }
-      p2.incrementCooldown(); //Increment cooldowns for both player's dodge/jumpAttack
-      p1.incrementCooldown();
+      //Increment ability cooldowns
+      for(int i = 0; i<players.length; i++) {
+        players[i].incrementCooldown();
+      }
       break;
     case '1': //player 1 win screen
       background(0,0,0);
