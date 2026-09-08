@@ -1,12 +1,7 @@
 class PrestonBrooks extends Player {
   
-  private boolean jumpUsed; //boolean flag to track whether the jump attack move is available
-  private int coolDown; //cooldown counter
-  
   public PrestonBrooks(int health, int score, int x, int y) {
     super(health, score, x, y); //pass in constructor params into the parent class
-    this.jumpUsed = false;
-    this.coolDown = 0;
   }
   
   @Override
@@ -25,16 +20,23 @@ class PrestonBrooks extends Player {
     }
   }
   
-  public void incrementCooldown() { // update cooldown
-    if(jumpUsed) {coolDown += 1;}
-    if(coolDown == 30) {coolDown = 0; jumpUsed = false;}
+  @Override
+  public void incrementCooldown() { //update cooldown (called in draw)
+    super.incrementCooldown();
+    if(super.getCooldown() == 30) {
+      super.setCooldown(0); 
+      super.setAbilityUsed(false);
+    } //if the dodge is not used, cooldown halts increment, sets to 0
   }
   
-  public void jumpAttack(int jumpX, int jumpY) { //take parameters that correspond to the position of p2
-    if(coolDown == 0) {
+  @Override
+  public void useAbility(int jumpX, int jumpY) { //take parameters that correspond to the position of p2
+    if(super.getCooldown() == 0) {
       super.setPosition(jumpX, jumpY); // jump to p2 position (use the position setter in parent class)
-      jumpUsed = true;
+      super.setAbilityUsed(true);
     }
   }
   
 }
+
+
