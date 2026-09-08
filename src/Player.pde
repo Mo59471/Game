@@ -8,7 +8,7 @@ class Player {
   private PImage caneImg_norm; // cane image in rest form
   private PImage caneImg_strike; // cane image in striking/attacking/slamming form
   private boolean abilityUsed; //track if the ability is used
-  private int coolDown; //track cooldown for abilities 
+  private int coolDown; //track cooldown for abilities (based on the 30 fps loop in draw)
   
   //constructor
   public Player(int health, int score, int x, int y) {
@@ -121,18 +121,22 @@ class Player {
     if(abilityUsed) {coolDown += 1;}
   }
   
+  //getter for cooldown
   public int getCooldown() {
     return coolDown;
   }
   
+  //setter for cooldown
   public void setCooldown(int setVal) {
     coolDown = setVal;
   }
   
+  //getter for abilityUsed
   public boolean getAbilityUsed() {
     return abilityUsed;
   }
   
+  //setter for abilityUsed
   public void setAbilityUsed(boolean setVal) {
     abilityUsed = setVal;
   }
