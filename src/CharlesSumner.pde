@@ -1,12 +1,7 @@
 class CharlesSumner extends Player {
-  
-  private int coolDown; //cooldown to track time (based on 30 FPS draw loop)
-  private boolean dodgeUsed; //flag to track whether dodge is available
-  
+    
   public CharlesSumner(int health, int score, int x, int y) {
     super(health, score, x, y); //pass in constructor variables to the parent class
-    this.coolDown = 0;
-    this.dodgeUsed = false;
   }
   
   @Override //Override annotation; denote the follwoing method overrides the parent class method
@@ -25,17 +20,22 @@ class CharlesSumner extends Player {
     }
   }
   
+  @Override
   public void incrementCooldown() { //update cooldown (called in draw)
-    if(dodgeUsed) {coolDown += 1;} //If the dodge is used, cooldown starts incrementing
-    if(coolDown == 60) {coolDown = 0; dodgeUsed = false;} //if the dodge is not used, cooldown halts increment, sets to 0
+    super.incrementCooldown();
+    if(super.getCooldown() == 60) {
+      super.setCooldown(0); 
+      super.setAbilityUsed(false);
+    } //if the dodge is not used, cooldown halts increment, sets to 0
   }
   
-  public void dodge() {
-    if(coolDown == 0) {
+  @Override
+  public void useAbility(int jumpX, int jumpY) { //args unused here: these arguments only apply for PrestonBrooks, but are needed since overriding methods must be identical to the parent method definition
+    if(super.getCooldown() == 0) {
       int randX = int(random(width-50)); //Select random position vars
       int randY = int(random(height-75));
       super.setPosition(randX, randY); //pass into the setter in the parent class
-      dodgeUsed = true;
+      super.setAbilityUsed(true);
     }
   }
   
