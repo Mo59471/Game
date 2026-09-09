@@ -48,7 +48,8 @@ In this reimagination, Sumner and Brooks have an epic 'caning battle'
 //instantiate player classes
 Player[] players = {
   new PrestonBrooks(100, 0, 50, 250),
-  new CharlesSumner(100, 0, 400, 250)
+  new CharlesSumner(100, 0, 400, 250),
+  new PrestonBrooks(100,0,50,250),//3rd Preston Brooks; serves no purpose, but required by the assignment (must have 3 object instantiations in the collection)
 };
 
 
@@ -72,7 +73,7 @@ char screen = 'p'; // 'p': play screen | '1': player 1 win screen | '2': player 
 
 // Array for storing the player data (p1 score, p1 health, p2 score, p2 health) that will be drawn to the screen
 // 2-Dimensional: Stores two sublists corresponding to each player, each containing health and sc
-int[][] playerData = new int[2][2]; 
+int[][] playerData = new int[3][2]; 
 
 // Setup (call once at start)
 void setup(){
